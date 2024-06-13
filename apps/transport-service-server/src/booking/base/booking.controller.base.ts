@@ -31,10 +31,23 @@ export class BookingControllerBase {
     @common.Body() data: BookingCreateInput
   ): Promise<Booking> {
     return await this.service.createBooking({
-      data: data,
+      data: {
+        ...data,
+
+        ID: {
+          connect: data.ID,
+        },
+      },
       select: {
         createdAt: true,
         id: true,
+
+        ID: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
       },
     });
@@ -50,6 +63,13 @@ export class BookingControllerBase {
       select: {
         createdAt: true,
         id: true,
+
+        ID: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
       },
     });
@@ -66,6 +86,13 @@ export class BookingControllerBase {
       select: {
         createdAt: true,
         id: true,
+
+        ID: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
       },
     });
@@ -87,10 +114,23 @@ export class BookingControllerBase {
     try {
       return await this.service.updateBooking({
         where: params,
-        data: data,
+        data: {
+          ...data,
+
+          ID: {
+            connect: data.ID,
+          },
+        },
         select: {
           createdAt: true,
           id: true,
+
+          ID: {
+            select: {
+              id: true,
+            },
+          },
+
           updatedAt: true,
         },
       });
@@ -116,6 +156,13 @@ export class BookingControllerBase {
         select: {
           createdAt: true,
           id: true,
+
+          ID: {
+            select: {
+              id: true,
+            },
+          },
+
           updatedAt: true,
         },
       });
@@ -127,5 +174,22 @@ export class BookingControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.Get("/:id/done")
+  @swagger.ApiOkResponse({
+    type: String,
+  })
+  @swagger.ApiNotFoundResponse({
+    type: errors.NotFoundException,
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
+  async Done(
+    @common.Body()
+    body: string
+  ): Promise<string> {
+    return this.service.Done(body);
   }
 }

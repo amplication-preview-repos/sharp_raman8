@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { DriverModule } from "./driver/driver.module";
 import { VehicleModule } from "./vehicle/vehicle.module";
+import { DriverModule } from "./driver/driver.module";
 import { RouteModule } from "./route/route.module";
 import { CustomerModule } from "./customer/customer.module";
 import { BookingModule } from "./booking/booking.module";
@@ -16,8 +16,8 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 @Module({
   controllers: [],
   imports: [
-    DriverModule,
     VehicleModule,
+    DriverModule,
     RouteModule,
     CustomerModule,
     BookingModule,

@@ -17,7 +17,10 @@ import { Driver } from "./Driver";
 import { DriverCountArgs } from "./DriverCountArgs";
 import { DriverFindManyArgs } from "./DriverFindManyArgs";
 import { DriverFindUniqueArgs } from "./DriverFindUniqueArgs";
+import { CreateDriverArgs } from "./CreateDriverArgs";
+import { UpdateDriverArgs } from "./UpdateDriverArgs";
 import { DeleteDriverArgs } from "./DeleteDriverArgs";
+import { Booking } from "../../booking/base/Booking";
 import { DriverService } from "../driver.service";
 @graphql.Resolver(() => Driver)
 export class DriverResolverBase {
@@ -49,6 +52,49 @@ export class DriverResolverBase {
   }
 
   @graphql.Mutation(() => Driver)
+  async createDriver(@graphql.Args() args: CreateDriverArgs): Promise<Driver> {
+    return await this.service.createDriver({
+      ...args,
+      data: {
+        ...args.data,
+
+        bookings: args.data.bookings
+          ? {
+              connect: args.data.bookings,
+            }
+          : undefined,
+      },
+    });
+  }
+
+  @graphql.Mutation(() => Driver)
+  async updateDriver(
+    @graphql.Args() args: UpdateDriverArgs
+  ): Promise<Driver | null> {
+    try {
+      return await this.service.updateDriver({
+        ...args,
+        data: {
+          ...args.data,
+
+          bookings: args.data.bookings
+            ? {
+                connect: args.data.bookings,
+              }
+            : undefined,
+        },
+      });
+    } catch (error) {
+      if (isRecordNotFoundError(error)) {
+        throw new GraphQLError(
+          `No resource was found for ${JSON.stringify(args.where)}`
+        );
+      }
+      throw error;
+    }
+  }
+
+  @graphql.Mutation(() => Driver)
   async deleteDriver(
     @graphql.Args() args: DeleteDriverArgs
   ): Promise<Driver | null> {
@@ -62,5 +108,18 @@ export class DriverResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => Booking, {
+    nullable: true,
+    name: "bookings",
+  })
+  async getBookings(@graphql.Parent() parent: Driver): Promise<Booking | null> {
+    const result = await this.service.getBookings(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
   }
 }

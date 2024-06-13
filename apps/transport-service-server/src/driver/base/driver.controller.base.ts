@@ -29,8 +29,22 @@ export class DriverControllerBase {
   @swagger.ApiCreatedResponse({ type: Driver })
   async createDriver(@common.Body() data: DriverCreateInput): Promise<Driver> {
     return await this.service.createDriver({
-      data: data,
+      data: {
+        ...data,
+
+        bookings: data.bookings
+          ? {
+              connect: data.bookings,
+            }
+          : undefined,
+      },
       select: {
+        bookings: {
+          select: {
+            id: true,
+          },
+        },
+
         createdAt: true,
         id: true,
         updatedAt: true,
@@ -46,6 +60,12 @@ export class DriverControllerBase {
     return this.service.drivers({
       ...args,
       select: {
+        bookings: {
+          select: {
+            id: true,
+          },
+        },
+
         createdAt: true,
         id: true,
         updatedAt: true,
@@ -62,6 +82,12 @@ export class DriverControllerBase {
     const result = await this.service.driver({
       where: params,
       select: {
+        bookings: {
+          select: {
+            id: true,
+          },
+        },
+
         createdAt: true,
         id: true,
         updatedAt: true,
@@ -85,8 +111,22 @@ export class DriverControllerBase {
     try {
       return await this.service.updateDriver({
         where: params,
-        data: data,
+        data: {
+          ...data,
+
+          bookings: data.bookings
+            ? {
+                connect: data.bookings,
+              }
+            : undefined,
+        },
         select: {
+          bookings: {
+            select: {
+              id: true,
+            },
+          },
+
           createdAt: true,
           id: true,
           updatedAt: true,
@@ -112,6 +152,12 @@ export class DriverControllerBase {
       return await this.service.deleteDriver({
         where: params,
         select: {
+          bookings: {
+            select: {
+              id: true,
+            },
+          },
+
           createdAt: true,
           id: true,
           updatedAt: true,

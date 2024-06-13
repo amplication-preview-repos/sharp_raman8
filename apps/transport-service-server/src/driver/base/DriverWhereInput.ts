@@ -11,12 +11,25 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { StringFilter } from "../../util/StringFilter";
+import { BookingWhereUniqueInput } from "../../booking/base/BookingWhereUniqueInput";
+import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
-import { IsOptional } from "class-validator";
+import { StringFilter } from "../../util/StringFilter";
 
 @InputType()
 class DriverWhereInput {
+  @ApiProperty({
+    required: false,
+    type: () => BookingWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => BookingWhereUniqueInput)
+  @IsOptional()
+  @Field(() => BookingWhereUniqueInput, {
+    nullable: true,
+  })
+  bookings?: BookingWhereUniqueInput;
+
   @ApiProperty({
     required: false,
     type: StringFilter,

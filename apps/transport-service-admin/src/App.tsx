@@ -5,14 +5,14 @@ import { theme } from "./theme/theme";
 import Login from "./Login";
 import "./App.scss";
 import Dashboard from "./pages/Dashboard";
-import { DriverList } from "./driver/DriverList";
-import { DriverCreate } from "./driver/DriverCreate";
-import { DriverEdit } from "./driver/DriverEdit";
-import { DriverShow } from "./driver/DriverShow";
 import { VehicleList } from "./vehicle/VehicleList";
 import { VehicleCreate } from "./vehicle/VehicleCreate";
 import { VehicleEdit } from "./vehicle/VehicleEdit";
 import { VehicleShow } from "./vehicle/VehicleShow";
+import { DriverList } from "./driver/DriverList";
+import { DriverCreate } from "./driver/DriverCreate";
+import { DriverEdit } from "./driver/DriverEdit";
+import { DriverShow } from "./driver/DriverShow";
 import { RouteList } from "./route/RouteList";
 import { RouteCreate } from "./route/RouteCreate";
 import { RouteEdit } from "./route/RouteEdit";
@@ -52,18 +52,18 @@ const App = (): React.ReactElement => {
         loginPage={Login}
       >
         <Resource
-          name="Driver"
-          list={DriverList}
-          edit={DriverEdit}
-          create={DriverCreate}
-          show={DriverShow}
-        />
-        <Resource
           name="Vehicle"
           list={VehicleList}
           edit={VehicleEdit}
           create={VehicleCreate}
           show={VehicleShow}
+        />
+        <Resource
+          name="Driver"
+          list={DriverList}
+          edit={DriverEdit}
+          create={DriverCreate}
+          show={DriverShow}
         />
         <Resource
           name="Route"

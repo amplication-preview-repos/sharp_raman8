@@ -10,7 +10,11 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "../../prisma/prisma.service";
-import { Prisma, Driver as PrismaDriver } from "@prisma/client";
+import {
+  Prisma,
+  Driver as PrismaDriver,
+  Booking as PrismaBooking,
+} from "@prisma/client";
 
 export class DriverServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
@@ -43,5 +47,13 @@ export class DriverServiceBase {
     args: Prisma.SelectSubset<T, Prisma.DriverDeleteArgs>
   ): Promise<PrismaDriver> {
     return this.prisma.driver.delete(args);
+  }
+
+  async getBookings(parentId: string): Promise<PrismaBooking | null> {
+    return this.prisma.driver
+      .findUnique({
+        where: { id: parentId },
+      })
+      .bookings();
   }
 }

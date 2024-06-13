@@ -9,22 +9,32 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-import { InputType, Field } from "@nestjs/graphql";
+import { ArgsType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { DriverWhereUniqueInput } from "../../driver/base/DriverWhereUniqueInput";
+import { DriverWhereUniqueInput } from "./DriverWhereUniqueInput";
 import { ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
+import { DriverUpdateInput } from "./DriverUpdateInput";
 
-@InputType()
-class BookingCreateInput {
+@ArgsType()
+class UpdateDriverArgs {
   @ApiProperty({
     required: true,
     type: () => DriverWhereUniqueInput,
   })
   @ValidateNested()
   @Type(() => DriverWhereUniqueInput)
-  @Field(() => DriverWhereUniqueInput)
-  ID!: DriverWhereUniqueInput | null;
+  @Field(() => DriverWhereUniqueInput, { nullable: false })
+  where!: DriverWhereUniqueInput;
+
+  @ApiProperty({
+    required: true,
+    type: () => DriverUpdateInput,
+  })
+  @ValidateNested()
+  @Type(() => DriverUpdateInput)
+  @Field(() => DriverUpdateInput, { nullable: false })
+  data!: DriverUpdateInput;
 }
 
-export { BookingCreateInput as BookingCreateInput };
+export { UpdateDriverArgs as UpdateDriverArgs };

@@ -11,11 +11,21 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsString } from "class-validator";
+import { Booking } from "../../booking/base/Booking";
+import { ValidateNested, IsOptional, IsDate, IsString } from "class-validator";
 import { Type } from "class-transformer";
 
 @ObjectType()
 class Driver {
+  @ApiProperty({
+    required: false,
+    type: () => Booking,
+  })
+  @ValidateNested()
+  @Type(() => Booking)
+  @IsOptional()
+  bookings?: Booking | null;
+
   @ApiProperty({
     required: true,
   })

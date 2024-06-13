@@ -7,16 +7,18 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Driver {
+model Vehicle {
   createdAt DateTime @default(now())
   id        String   @id @default(cuid())
   updatedAt DateTime @updatedAt
 }
 
-model Vehicle {
-  createdAt DateTime @default(now())
-  id        String   @id @default(cuid())
-  updatedAt DateTime @updatedAt
+model Driver {
+  bookings   Booking? @relation(fields: [bookingsId], references: [id])
+  bookingsId String?  @unique
+  createdAt  DateTime @default(now())
+  id         String   @id @default(cuid())
+  updatedAt  DateTime @updatedAt
 }
 
 model Route {
@@ -34,5 +36,6 @@ model Customer {
 model Booking {
   createdAt DateTime @default(now())
   id        String   @id @default(cuid())
+  ID        Driver?
   updatedAt DateTime @updatedAt
 }

@@ -17,7 +17,10 @@ import { Booking } from "./Booking";
 import { BookingCountArgs } from "./BookingCountArgs";
 import { BookingFindManyArgs } from "./BookingFindManyArgs";
 import { BookingFindUniqueArgs } from "./BookingFindUniqueArgs";
+import { CreateBookingArgs } from "./CreateBookingArgs";
+import { UpdateBookingArgs } from "./UpdateBookingArgs";
 import { DeleteBookingArgs } from "./DeleteBookingArgs";
+import { Driver } from "../../driver/base/Driver";
 import { BookingService } from "../booking.service";
 @graphql.Resolver(() => Booking)
 export class BookingResolverBase {
@@ -51,6 +54,47 @@ export class BookingResolverBase {
   }
 
   @graphql.Mutation(() => Booking)
+  async createBooking(
+    @graphql.Args() args: CreateBookingArgs
+  ): Promise<Booking> {
+    return await this.service.createBooking({
+      ...args,
+      data: {
+        ...args.data,
+
+        ID: {
+          connect: args.data.ID,
+        },
+      },
+    });
+  }
+
+  @graphql.Mutation(() => Booking)
+  async updateBooking(
+    @graphql.Args() args: UpdateBookingArgs
+  ): Promise<Booking | null> {
+    try {
+      return await this.service.updateBooking({
+        ...args,
+        data: {
+          ...args.data,
+
+          ID: {
+            connect: args.data.ID,
+          },
+        },
+      });
+    } catch (error) {
+      if (isRecordNotFoundError(error)) {
+        throw new GraphQLError(
+          `No resource was found for ${JSON.stringify(args.where)}`
+        );
+      }
+      throw error;
+    }
+  }
+
+  @graphql.Mutation(() => Booking)
   async deleteBooking(
     @graphql.Args() args: DeleteBookingArgs
   ): Promise<Booking | null> {
@@ -64,5 +108,26 @@ export class BookingResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => Driver, {
+    nullable: true,
+    name: "id",
+  })
+  async getId(@graphql.Parent() parent: Booking): Promise<Driver | null> {
+    const result = await this.service.getId(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
+  }
+
+  @graphql.Query(() => String)
+  async Done(
+    @graphql.Args()
+    args: string
+  ): Promise<string> {
+    return this.service.Done(args);
   }
 }
